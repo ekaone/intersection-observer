@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import Head from "next/head";
 import { useInView } from "react-intersection-observer";
+import toast, { Toaster } from "react-hot-toast";
+
 import ScrollWrapper from "./elements/ScrollWrapper";
 
 import styles from "../styles/Home.module.css";
@@ -8,6 +11,33 @@ export default function Home() {
   const { ref, inView } = useInView({
     threshold: 0,
   });
+
+  const notifyIn = () =>
+    toast("In viewport", {
+      icon: "👏",
+      duration: 2000,
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+  const notifyOut = () =>
+    toast("Out viewport", {
+      icon: "🖐️",
+      duration: 2000,
+      position: "bottom-center",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+
+  useEffect(() => {
+    inView ? notifyIn() : notifyOut();
+    console.log(inView);
+  }, [inView]);
 
   return (
     <>
@@ -23,6 +53,7 @@ export default function Home() {
             <h2>
               Element is inside the viewport:{" "}
               <strong>{inView.toString()}</strong>
+              <Toaster />
             </h2>
           </div>
         </ScrollWrapper>
